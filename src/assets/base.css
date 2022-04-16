@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
-:root {
-  --vt-c-white: #ffffff;
-}
-
+@import url('./variables.css');
 
 *,
 *::before,
@@ -16,8 +12,7 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
+  color: var(--main-copy-color);
   transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
   font-family: 'Roboto', sans-serif;
@@ -25,4 +20,16 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap; /* added line */
+  border: 0;
 }

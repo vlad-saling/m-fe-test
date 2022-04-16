@@ -1,33 +1,46 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from '@/components/HelloWorld.vue'
+import { RouterView } from 'vue-router';
+import Header from './components/Header.vue';
+import Navigation from "./components/Navigation.vue";
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <Header />
+  <Navigation />
+  <main>
+    <RouterView />
+  </main>
+  <footer>
+    <p>
+      <a href="#">Terms&Conditions</a> | <a href="#">Privacy policy</a>
+    </p>
+  </footer>
 </template>
 
-<style>
-@import '@/assets/base.css';
+<style lang="scss">
+@import './assets/base.css';
 
 #app {
   /* layout to go here */
+  display: grid;
+  grid-template: "header header" 80px
+"sidebar content" calc(100vh - 122px)
+"footer footer" 42px/90px auto
 }
 
+main {
+  grid-area: content;
+}
 
+footer {
+  grid-area: footer;
+  padding: 0 100px 22px;
 
+  > p > a {
+    color: var(--accented-copy-color);
+    font-weight: bold;
+    text-decoration: none;
+  }
+}
 
 </style>

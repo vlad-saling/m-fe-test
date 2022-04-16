@@ -1,0 +1,22 @@
+:root {
+    --accent-color-1: #1BC5BD;
+    --accent-color-2: #005B96;
+
+    --module-background-color: #F1FAFE;
+
+    /* main text - core data in UI */
+    --main-copy-color: #011F4B;
+
+    /* supplemental text - placeholders, general information */
+    --secondary-copy-color: #7E8299;
+
+    /* specific copy - footer, usernames */
+    --accented-copy-color: var(--accent-color-2);
+
+    /* specific UI colors  */
+    --border-color: #F3F6F9;
+    --avatar-background-color: #F6CA65;
+
+    /* aliased colours  */
+    --white: #fff;
+}
