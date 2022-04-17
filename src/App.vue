@@ -18,7 +18,7 @@ import Navigation from "./components/Navigation.vue";
 </template>
 
 <style lang="scss">
-@import './assets/base.css';
+@import './assets/scss/base.scss';
 
 #app {
   /* layout to go here */

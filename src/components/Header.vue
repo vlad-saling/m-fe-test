@@ -1,6 +1,6 @@
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="../assets/logo.png" width="27" height="40" />
+    <img alt="Vue logo" class="logo" src="../assets/images/logo.png" width="27" height="40" />
     <button class="menu-button" aria-label="menu button">
       <span class="menu-button__hamburger">Menu</span>
     </button>
