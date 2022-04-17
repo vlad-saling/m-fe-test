@@ -6,16 +6,11 @@
           :class="{ isActive: projectDropdownActive }"
           class="hasDropdown"
       >
-        Select project
+        {{ getProjectName }}
       </button>
       <ul v-if="projectDropdownActive" class="reports-header__action-list">
-        <li key="allProjects">
-          <a href="#" class="reports-header__action-link">
-            All projects
-          </a>
-        </li>
         <li v-for="project in projects" :key="project.id">
-          <a :href="project.url" class="reports-header__action-link">
+          <a :href="project.url" class="reports-header__action-link" @click="selectProject(project.id)">
             {{ project.name }}
           </a>
         </li>
@@ -27,16 +22,11 @@
           :class="{ isActive: gatewayDropdownActive }"
           class="hasDropdown"
       >
-        Select gateway
+        {{ getGatewayName }}
       </button>
       <ul v-if="gatewayDropdownActive" class="reports-header__action-list">
-        <li key="allGateway">
-          <a href="#" class="reports-header__action-link">
-            All projects
-          </a>
-        </li>
         <li v-for="gateway in gateways" :key="gateway.id">
-          <a :href="gateway.url" class="reports-header__action-link">
+          <a :href="gateway.url" class="reports-header__action-link" @click="selectGateway(gateway.id)">
             {{ gateway.name }}
           </a>
         </li>
@@ -86,6 +76,11 @@ export default {
       fromDate: null,
       toDate: null,
       projects: [
+        {
+          id: 0,
+          name: "All projects",
+          url: "#"
+        },
         {
           id: 1,
           name: "Project 1",
@@ -137,10 +132,32 @@ export default {
       selectingToDate: false,
     }
   },
+  computed: {
+    getProjectName () {
+      if (this.selectedProject === null) {
+        return "Select project"
+      }
+      return this.projects.find(project => project.id === this.selectedProject).name
+    },
+    getGatewayName () {
+      if (this.selectedGateway === null) {
+        return "Select gateway"
+      }
+      return this.gateways.find(gateway => gateway.id === this.selectedGateway).name
+    },
+  },
   methods: {
     toggleDropdown (dropdown) {
       this[dropdown + "DropdownActive"] = !this[dropdown + "DropdownActive"];
-    }
+    },
+    selectProject (project) {
+      this.selectedProject = project;
+      this.projectDropdownActive = false;
+    },
+    selectGateway (gateway) {
+      this.selectedGateway = gateway;
+      this.gatewayDropdownActive = false;
+    },
   }
 }
 </script>
@@ -164,7 +181,12 @@ export default {
       background-color: var(--accent-color-1);
       color: var(--white);
       border-radius: 5px;
-      padding: 8px 52px 8px 13px;
+      padding: 8px 26px 8px 13px;
+      width: 145px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
 
       &:hover {
         cursor: pointer;
