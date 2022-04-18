@@ -16,16 +16,16 @@
         <li
           v-for="(item, index) in parsedReportData"
           @click="selectSegment(index)"
-          :class="{'isSelected': selectedSegment === index || isSingleProject}"
+          :class="{'isSelected': selectedSegment === index || (this.selector === 'projectId' && isSingleProject) || (this.selector === 'gatewayId' && isSingleGateway)}"
         >
-          <h1 v-if="queryData.projectId === 'all' || queryData.projectId === null || queryData.projectId === undefined">
+          <h1 v-if="(this.selector === 'projectId' && !isSingleProject) || (this.selector === 'gatewayId' && !isSingleGateway)">
             {{ item.name }}
             <span>
               TOTAL: {{formattedAmount(item.totalAmount)}}
             </span>
           </h1>
           <table
-            :class="{'isSelected': selectedSegment === index || isSingleProject}"
+            :class="{'isSelected': selectedSegment === index || (this.selector === 'projectId' && isSingleProject) || (this.selector === 'gatewayId' && isSingleGateway)}"
             class="reportTable"
           >
             <thead>
@@ -34,7 +34,7 @@
                   Date
                 </th>
                 <th>
-                  Gateway
+                  {{ selector === 'projectId' ? 'Gateway' : 'Project' }}
                 </th>
                 <th>
                   Transaction ID
@@ -49,7 +49,7 @@
                 {{ getFormattedDate(transaction.created) }}
               </td>
               <td>
-                {{ getGatewayName(transaction.gatewayId) }}
+                {{  selector === 'projectId' ? getGatewayName(transaction.gatewayId) : getProjectName(transaction.projectId) }}
               </td>
               <td>
                 {{ transaction.paymentId }}
@@ -79,7 +79,7 @@
 
     <div class="container reportSum">
       <p class="sum">
-        TOTAL: {{ formattedAmount(grandTotal) }}
+        {{ sumTitle }} TOTAL: {{ formattedAmount(grandTotal) }}
       </p>
     </div>
   </div>
@@ -126,6 +126,7 @@ export default {
         },
       },
       parsedReportData: null,
+      selector: this.isSingleProject ? 'gatewayId' : 'projectId'
     }
   },
   computed: {
@@ -146,6 +147,12 @@ export default {
     isSingleGateway() {
       return this.queryData.gatewayId !== 'all' && this.queryData.gatewayId !== null && this.queryData.gatewayId !== undefined;
     },
+    sumTitle() {
+      if ((this.isSingleProject && this.isSingleGateway) || (!this.isSingleProject && !this.isSingleGateway)) {
+        return '';
+      }
+      return this.selector === 'projectId' ? 'PROJECT' : 'GATEWAY';
+    },
   },
   methods: {
     getParsedReportData() {
@@ -161,19 +168,19 @@ export default {
           }],
         };
         let grandTotal = 0;
+        this.selector = this.isSingleProject ? 'gatewayId' : 'projectId'
 
-        // group data based on projectId
         this.reportData.forEach(item => {
-          if (dataObject[item.projectId] === undefined) {
-            dataObject[item.projectId] = {
-              projectId: item.projectId,
-              name: this.store.projects.find(p => p.projectId === item.projectId)?.name,
+          if (dataObject[item[this.selector]] === undefined) {
+            dataObject[item[this.selector]] = {
+              [this.selector]: item[this.selector],
+              name: this.selector === "projectId" ? this.store.projects.find(p => p[this.selector] === item[this.selector])?.name : this.store.gateways.find(g => g[this.selector] === item[this.selector])?.name,
               totalAmount: item.amount,
               transactions: []
             };
           }
-          dataObject[item.projectId].totalAmount += item.amount;
-          dataObject[item.projectId].transactions.push(item);
+          dataObject[item[this.selector]].totalAmount += item.amount;
+          dataObject[item[this.selector]].transactions.push(item);
           grandTotal += item.amount;
         });
 
@@ -191,6 +198,9 @@ export default {
     },
     getGatewayName(gatewayId) {
       return this.store.gateways.find(g => g.gatewayId === gatewayId)?.name;
+    },
+    getProjectName(projectId) {
+      return this.store.projects.find(p => p.projectId === projectId)?.name;
     },
     formattedAmount(amount) {
       return `${amount.toLocaleString('en-US')} USD`;
@@ -210,6 +220,9 @@ export default {
       }
       return color;
     },
+  },
+  created() {
+    this.parsedReportData = this.getParsedReportData();
   },
   watch: {
     reportData: {
@@ -331,10 +344,10 @@ export default {
 }
 
 .reportTable {
-  width: calc(100% - 15px);
+  width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  margin: 14px 0 14px 15px;
+  margin: 14px 0;
   display: none;
 
   &.isSelected {
