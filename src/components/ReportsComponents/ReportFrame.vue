@@ -33,8 +33,8 @@
                 <th>
                   Date
                 </th>
-                <th>
-                  {{ selector === 'projectId' ? 'Gateway' : 'Project' }}
+                <th v-if="selector === 'projectId' && !isSingleGateway">
+                  Gateway
                 </th>
                 <th>
                   Transaction ID
@@ -48,8 +48,8 @@
               <td>
                 {{ getFormattedDate(transaction.created) }}
               </td>
-              <td>
-                {{  selector === 'projectId' ? getGatewayName(transaction.gatewayId) : getProjectName(transaction.projectId) }}
+              <td v-if="selector === 'projectId' && !isSingleGateway">
+                {{getGatewayName(transaction.gatewayId) }}
               </td>
               <td>
                 {{ transaction.paymentId }}
@@ -151,7 +151,7 @@ export default {
       if ((this.isSingleProject && this.isSingleGateway) || (!this.isSingleProject && !this.isSingleGateway)) {
         return '';
       }
-      return this.selector === 'projectId' ? 'PROJECT' : 'GATEWAY';
+      return this.selector === 'projectId' ? 'GATEWAY' : 'PROJECT';
     },
   },
   methods: {
