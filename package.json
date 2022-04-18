@@ -12,8 +12,10 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "chart.js": "^3.7.1",
     "pinia": "^2.0.13",
     "vue": "^3.2.31",
+    "vue-chartjs": "^4.0.5",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {

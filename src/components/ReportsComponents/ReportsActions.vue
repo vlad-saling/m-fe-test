@@ -2,162 +2,150 @@
   <div class="reports-header__actions">
     <div class="reports-header__action">
       <button
-          @click="toggleDropdown('project')"
-          :class="{ isActive: projectDropdownActive }"
-          class="hasDropdown"
+        @click="toggleDropdown('Project')"
+        :class="{ isActive: isProjectDropdownActive }"
+        class="hasDropdown"
       >
-        {{ getProjectName }}
+        {{ getSelectedItemName('project') }}
       </button>
-      <ul v-if="projectDropdownActive" class="reports-header__action-list">
-        <li v-for="project in projects" :key="project.id">
-          <a :href="project.url" class="reports-header__action-link" @click="selectProject(project.id)">
-            {{ project.name }}
-          </a>
+      <ul v-if="isProjectDropdownActive" class="reports-header__action-list">
+        <li
+          v-for="project in store.projects"
+          :key="project.projectId"
+          @click="selectItem('Project', project.projectId)"
+        >
+          {{ project.name }}
         </li>
       </ul>
     </div>
     <div class="reports-header__action">
       <button
-          @click="toggleDropdown('gateway')"
-          :class="{ isActive: gatewayDropdownActive }"
-          class="hasDropdown"
+        @click="toggleDropdown('Gateway')"
+        :class="{ isActive: isGatewayDropdownActive }"
+        class="hasDropdown"
       >
-        {{ getGatewayName }}
+        {{ getSelectedItemName('gateway') }}
       </button>
-      <ul v-if="gatewayDropdownActive" class="reports-header__action-list">
-        <li v-for="gateway in gateways" :key="gateway.id">
-          <a :href="gateway.url" class="reports-header__action-link" @click="selectGateway(gateway.id)">
-            {{ gateway.name }}
-          </a>
+      <ul v-if="isGatewayDropdownActive" class="reports-header__action-list">
+        <li
+          v-for="gateway in store.gateways"
+          :key="gateway.gatewayId"
+          @click="selectItem('Gateway' ,gateway.gatewayId)"
+        >
+          {{ gateway.name }}
         </li>
       </ul>
     </div>
     <div class="reports-header__action">
       <button
-          v-if="selectedFromDate === null && !selectingFromDate"
-          @click="selectingFromDate = true"
-          class="reports-header__action--date"
+        v-if="selectedFromDate === null && !selectingFromDate"
+        @click="selectingFromDate = true"
+        class="reports-header__action--date"
       >
         From date
       </button>
       <input
-          v-else
-          type="date"
-          v-model="selectedFromDate"
+        v-else
+        type="date"
+        v-model="selectedFromDate"
       />
     </div>
     <div class="reports-header__action">
       <button
-          v-if="selectedToDate === null && !selectingToDate"
-          @click="selectingToDate = true"
-          class="reports-header__action--date"
+        v-if="selectedToDate === null && !selectingToDate"
+        @click="selectingToDate = true"
+        class="reports-header__action--date"
       >
         To date
       </button>
       <input
-          v-else
-          type="date"
-          v-model="selectedToDate"
+        v-else
+        type="date"
+        v-model="selectedToDate"
       />
     </div>
     <div class="reports-header__action">
-      <button>Generate report</button>
+      <button
+        @click="generateReport(getReportQuery())"
+      >
+        Generate report
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { useReportsStore } from "../../stores/reports";
+
 export default {
+  setup() {
+    const store = useReportsStore()
+    return { store }
+  },
   name: "ReportsActions",
+  props: {
+    generateReport: Function
+  },
   data () {
     return {
       selectedProject: null,
       selectedGateway: null,
       fromDate: null,
       toDate: null,
-      projects: [
-        {
-          id: 0,
-          name: "All projects",
-          url: "#"
-        },
-        {
-          id: 1,
-          name: "Project 1",
-          url: "#"
-        },
-        {
-          id: 2,
-          name: "Project 2",
-          url: "#"
-        },
-        {
-          id: 3,
-          name: "Project 3",
-          url: "#"
-        },
-        {
-          id: 4,
-          name: "Project 4",
-          url: "#"
-        }
-      ],
-      projectDropdownActive: false,
-      gateways: [
-        {
-          id: 1,
-          name: "Gateway 1",
-          url: "#"
-        },
-        {
-          id: 2,
-          name: "Gateway 2",
-          url: "#"
-        },
-        {
-          id: 3,
-          name: "Gateway 3",
-          url: "#"
-        },
-        {
-          id: 4,
-          name: "Gateway 4",
-          url: "#"
-        }
-      ],
-      gatewayDropdownActive: false,
+      isProjectDropdownActive: false,
+      isGatewayDropdownActive: false,
       selectedFromDate: null,
       selectingFromDate: false,
       selectedToDate: null,
       selectingToDate: false,
     }
   },
-  computed: {
-    getProjectName () {
-      if (this.selectedProject === null) {
-        return "Select project"
-      }
-      return this.projects.find(project => project.id === this.selectedProject).name
+  methods: {
+    toggleDropdown (itemType) {
+      this[`is${itemType}DropdownActive`] = !this[`is${itemType}DropdownActive`];
     },
-    getGatewayName () {
-      if (this.selectedGateway === null) {
-        return "Select gateway"
+    selectItem (itemType, item) {
+      this["selected" + itemType] = item;
+      this[`is${itemType}DropdownActive`] = false;
+    },
+    getSelectedItemName (itemType) {
+      if (itemType === "project") {
+        if (this.selectedProject === null) {
+          return "Select project"
+        }
+        return this.store.projects.find(project => project.projectId === this.selectedProject).name
       }
-      return this.gateways.find(gateway => gateway.id === this.selectedGateway).name
+
+      if (itemType === "gateway") {
+        if (this.selectedGateway === null) {
+          return "Select gateway"
+        }
+        return this.store.gateways.find(gateway => gateway.gatewayId === this.selectedGateway).name
+      }
+    },
+    getReportQuery () {
+      // check if year in date is 2021
+      if ((this.selectedFromDate === null || this.selectedToDate === null) || (this.selectedFromDate.substring(0, 4) !== "2021" || this.selectedToDate.substring(0, 4) !== "2021")) {
+        alert("Please select dates from 2021");
+      } else {
+        // compare dates
+        if (this.selectedFromDate > this.selectedToDate) {
+          alert("Starting date cannot be later than ending date");
+        } else {
+          return {
+            projectId: this.selectedProject,
+            gatewayId: this.selectedGateway,
+            from: this.selectedFromDate,
+            to: this.selectedToDate,
+          }
+        }
+
+      }
     },
   },
-  methods: {
-    toggleDropdown (dropdown) {
-      this[dropdown + "DropdownActive"] = !this[dropdown + "DropdownActive"];
-    },
-    selectProject (project) {
-      this.selectedProject = project;
-      this.projectDropdownActive = false;
-    },
-    selectGateway (gateway) {
-      this.selectedGateway = gateway;
-      this.gatewayDropdownActive = false;
-    },
+  created() {
+    const main = useReportsStore();
+    main.requestInitialData();
   }
 }
 </script>
@@ -236,10 +224,12 @@ export default {
 
       > li {
         font-size: 14px;
+        opacity: 0.9;
+        color: var(--white);
 
-        > a {
-          color: var(--white);
-          text-decoration: none;
+        &:hover {
+          cursor: pointer;
+          opacity: 1;
         }
       }
     }

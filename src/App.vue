@@ -4,6 +4,18 @@ import Header from './components/Header.vue';
 import Navigation from "./components/Navigation.vue";
 </script>
 
+<script>
+import { useUserStore } from "./stores/user";
+
+export default {
+name: "B-App",
+created() {
+  const main = useUserStore();
+  main.requestInitialData();
+}
+};
+</script>
+
 <template>
   <Header />
   <Navigation />
@@ -21,15 +33,16 @@ import Navigation from "./components/Navigation.vue";
 @import './assets/scss/base.scss';
 
 #app {
-  /* layout to go here */
   display: grid;
   grid-template: "header header" 80px
-"sidebar content" calc(100vh - 122px)
+"sidebar content" minmax(calc(100vh - 122px), auto)
 "footer footer" 42px/90px auto
 }
 
 main {
   grid-area: content;
+  display: flex;
+  flex-direction: column;
 }
 
 footer {

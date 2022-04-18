@@ -4,7 +4,9 @@
       <h1>Reports</h1>
       <p>Easily generate a report of your transactions</p>
     </div>
-    <ReportsActions />
+    <ReportsActions
+        :generateReport="generateReport"
+    />
   </div>
 </template>
 
@@ -13,7 +15,12 @@ import ReportsActions from "./ReportsActions.vue";
 
 export default {
   name: "ReportsHeader",
-  components: {ReportsActions}
+  components: {
+    ReportsActions
+  },
+  props: {
+    generateReport: Function
+  }
 }
 </script>
 
@@ -26,12 +33,13 @@ export default {
 
   .title {
     > h1 {
-      font-weight: bold;
+      font-weight: 700;
       font-size: 24px;
     }
     > p {
       font-size: 16px;
       color: var(--secondary-copy-color);
+      font-weight: 700;
     }
   }
 }

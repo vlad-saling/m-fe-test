@@ -9,27 +9,29 @@
         {{ userInitials }}
       </div>
       <span class="user__name">
-        {{ user.name }}
+        {{ store.user.firstName }} {{ store.user.lastName }}
       </span>
     </div>
   </header>
 </template>
 
 <script>
+import { useUserStore } from "../stores/user";
+
 export default {
+  setup() {
+    const store = useUserStore()
+
+    return { store }
+  },
   name: "Header",
-  data () {
-    return {
-      user: {
-        name: "John Doe"
+  computed: {
+    userInitials () {
+      if (this.store.user.firstName && this.store.user.lastName) {
+        return `${this.store.user.firstName[0]} ${this.store.user.lastName[0]}`
       }
     }
   },
-  computed: {
-    userInitials () {
-      return this.user.name.split(" ").map(name => name[0]).join("")
-    }
-  }
 }
 </script>
 
