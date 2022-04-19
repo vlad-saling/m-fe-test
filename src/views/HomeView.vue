@@ -1,5 +1,7 @@
 <template>
-  Home section
+  <div>
+    App section
+  </div>
 </template>
 
 <script>
@@ -9,5 +11,7 @@ export default {
 </script>
 
 <style scoped>
-
+div {
+  padding: 27px 100px 27px 8px;
+}
 </style>

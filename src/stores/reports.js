@@ -13,6 +13,7 @@ export const useReportsStore = defineStore({
       fetch (' http://178.63.13.157:8090/mock-api/api/projects')
         .then (response => response.json())
         .then (data => {
+          this.projects = [];
           this.projects.push({
             id: 'all',
             name: 'All projects'
@@ -29,6 +30,7 @@ export const useReportsStore = defineStore({
       fetch (' http://178.63.13.157:8090/mock-api/api/gateways')
         .then (response => response.json())
         .then (data => {
+          this.gateways = [];
           this.gateways.push({
             id: 'all',
             name: 'All gateways'

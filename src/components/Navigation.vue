@@ -27,7 +27,7 @@ import { RouterLink } from 'vue-router';
         </router-link>
       </li>
       <li class="nav__link">
-        <router-link to="/reports">
+        <router-link to="/reports" data-cy="reports-section">
           <img src="../assets/images/nav-icons/report-active.svg" width="25" height="25" alt="Report">
         </router-link>
       </li>

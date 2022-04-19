@@ -6,7 +6,7 @@
     <div
       class="container reportDetails"
     >
-      <p class="breadCrumbs">
+      <p class="breadCrumbs" data-cy="breadcrumbs">
         {{ selectedProject }} | {{ selectedGateway }}
       </p>
 

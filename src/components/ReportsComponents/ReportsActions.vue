@@ -41,6 +41,7 @@
         v-if="selectedFromDate === null && !selectingFromDate"
         @click="selectingFromDate = true"
         class="reports-header__action--date"
+        data-cy="from-date-button"
       >
         From date
       </button>
@@ -48,6 +49,8 @@
         v-else
         type="date"
         v-model="selectedFromDate"
+        min="2021-01-01" max="2021-12-31"
+        data-cy="from-date"
       />
     </div>
     <div class="reports-header__action">
@@ -55,6 +58,7 @@
         v-if="selectedToDate === null && !selectingToDate"
         @click="selectingToDate = true"
         class="reports-header__action--date"
+        data-cy="to-date-button"
       >
         To date
       </button>
@@ -62,11 +66,14 @@
         v-else
         type="date"
         v-model="selectedToDate"
+        min="2021-01-01" max="2021-12-31"
+        data-cy="to-date"
       />
     </div>
     <div class="reports-header__action">
       <button
         @click="generateReport(getReportQuery())"
+        data-cy="generate-report"
       >
         Generate report
       </button>
@@ -250,6 +257,11 @@ export default {
       color: var(--white);
       font-family: inherit;
       position: relative;
+
+      // html-set date range font color fix
+      &::-webkit-datetime-edit-year-field {
+        color: var(--white);
+      }
 
       &:after {
         content: "";

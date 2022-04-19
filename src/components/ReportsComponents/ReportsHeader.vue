@@ -31,15 +31,30 @@ export default {
   margin-top: 35px;
   padding-left: 8px;
 
+  @media screen and (max-width: 1369px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .title {
     > h1 {
       font-weight: 700;
       font-size: 24px;
+
+      @media screen and (max-width: 1369px) {
+        display: inline-block;
+        margin-bottom: 16px;
+        margin-right: 32px;
+      }
     }
     > p {
       font-size: 16px;
       color: var(--secondary-copy-color);
       font-weight: 700;
+
+      @media screen and (max-width: 1369px) {
+        display: inline-block;
+      }
     }
   }
 }
