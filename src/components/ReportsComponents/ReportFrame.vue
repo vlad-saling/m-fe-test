@@ -93,7 +93,6 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale)
 
 import { useReportsStore } from "../../stores/reports";
 
-
 export default {
   name: "ReportFrame.vue",
   components: {
@@ -122,7 +121,7 @@ export default {
         plugins: {
           legend: {
             display: false,
-          }
+          },
         },
       },
       parsedReportData: null,
